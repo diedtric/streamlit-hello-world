@@ -14,8 +14,18 @@ def fetch_data(tickers, start_date, end_date):
 
 st.title("Financial Analysis Web App")
 
-# user inputs
+def calculate_sharpe_ratio(returns, risk_free_rate=0.02):
+  portfolio_return = returns.mean().mean()
+  portfolio_volatility = returns.std().mean()
+  return (portfolio_return - risk_free_rate) / portfolio_volatility
 
+def calculate_sortino_ratio(returns, risk_free_rate=0.02) :
+  portfolio_return = returns.mean().mean()
+  downside_returns = returns[returns < 0]
+  downside_deviation = downside_returns.std.mean()
+  return (portfolio_return - risk_free_rate) / downside_deviation
+
+# user inputs
 
 tickers = st.text_input("Enter stock tickers (comma separated)", "APPL, MSFT, GOOG").split(",")
 tickers =  [ticker.strip() for ticker in tickers]
@@ -28,8 +38,16 @@ stock_data = fetch_data(tickers, start_date, end_date)
 returns_data = stock_data.pct_change().dropna()
 
 # Visualizations
+
 st.subheader("Stock Prices")
 st.line_chart(stock_data)
 
 st.subheader("Stock Returns")
 st.line_chart(returns_date)
+
+sharpe_ratio = calculate_sharpe_ratio(returns_data)
+sortino_ratio = calculate_sortino_ratio(returns_data)
+
+st.subheader("Performance Metrics")
+st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
+st.write(f"Sortino Ratio: {sortino_ratio:.2f}")
