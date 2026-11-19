@@ -24,7 +24,7 @@ end_date = st.date_input("End Date", pd.to_datetime("2023-01-01"))
 
 #Fetch stock date
 
-stock_data = fetch_data(tickers, start-date, end_date)
+stock_data = fetch_data(tickers, start_date, end_date)
 returns_data = stock_data.pct_change().dropna()
 
 # Visualizations
